@@ -13,7 +13,7 @@ pip install opencv_contrib_python
 
 ## Usage
 
-![](/Cature.JPG)
+![](/Capture.JPG)
 
 ![](/Capture1.JPG)
 
