@@ -42,17 +42,17 @@ class AlColorImageGenerator:
             cv2.waitKey(0)
 
         appHighlightFont = font.Font(family='sans-serif', size=12, weight='bold')
-        textHighlightFont = font.Font(family='LEMON MILK', size=10)
+        textHighlightFont = font.Font(family='Segoe UI', size=12, weight='bold')
 
         #image widget
-        imageFile = Label(root, text="Image to be converted")
+        imageFile = Label(root, text="IMAGE TO BE COVERTED")
         imageFile.pack()
         imageFile.config(bg=color,fg="black",font=textHighlightFont)
         imageFile= Entry(root, bg="black", fg=color, highlightbackground=color, highlightcolor=color, highlightthickness=3, bd=0,font=appHighlightFont)
         imageFile.pack(fill=X)
 
         #submit button
-        convert = Button(root, borderwidth=0, highlightthickness=5, text="Convert Image", command=convert)
+        convert = Button(root, borderwidth=0, highlightthickness=5, text="CONVERT IMAGE", command=convert)
         convert.config(bg=color,fg="black",font=textHighlightFont)
         convert.pack(fill=X)
 
