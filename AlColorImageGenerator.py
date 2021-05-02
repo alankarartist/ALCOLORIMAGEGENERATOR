@@ -10,6 +10,7 @@ class AlColorImageGenerator:
     def __init__(self):
         root = Tk(className=" ALCOLORIMAGENERATOR ")
         root.geometry("350x90+1560+925")
+        root.resizable(0,0)
         root.iconbitmap(os.path.join(cwd+'\\UI\\icons', 'alcolorimagegenerator.ico'))
         root.config(bg="#FFFFFF")
         color = '#FFFFFF'
