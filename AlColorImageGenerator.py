@@ -26,7 +26,6 @@ class AlColorImageGenerator:
             img = imageFile.get()
             cimg = 'color_' + img
             img = os.path.join(cwd+'\AlColorImageGenerator\images', 'bw\\'+img)
-            print(img)
             image = cv2.imread(img)
             scaled = image.astype("float32")/255.0
             lab = cv2.cvtColor(scaled,cv2.COLOR_BGR2LAB)
