@@ -18,7 +18,7 @@ class AlColorImageGenerator:
         color = '#000000'
         
         def callback(event):
-            root.geometry("360x100+1550+915")
+            root.geometry("400x130+1510+885")
 
         def showScreen(event):
             root.deiconify()
