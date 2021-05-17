@@ -21,7 +21,7 @@ class AlColorImageGenerator:
             root.geometry("360x100+1550+915")
 
         def showScreen(event):
-            root.iconify()
+            root.deiconify()
             root.overrideredirect(1)
 
         def screenAppear(event):
