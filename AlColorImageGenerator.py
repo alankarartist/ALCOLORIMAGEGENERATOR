@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from tkinter import*
 from tkinter import font
+from PIL import ImageTk, Image
 import os
 
 cwd = os.path.dirname(os.path.realpath(__file__))
@@ -9,11 +10,26 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 class AlColorImageGenerator:
     def __init__(self):
         root = Tk(className=" ALCOLORIMAGENERATOR ")
-        root.geometry("350x90+1560+925")
+        root.geometry("400x130+1510+885")
         root.resizable(0,0)
         root.iconbitmap(os.path.join(cwd+'\\UI\\icons', 'alcolorimagegenerator.ico'))
-        root.config(bg="#FFFFFF")
-        color = '#FFFFFF'
+        root.config(bg="#000000")
+        root.overrideredirect(1)
+        color = '#000000'
+        
+        def callback(event):
+            root.geometry("360x100+1550+915")
+
+        def showScreen(event):
+            root.iconify()
+            root.overrideredirect(1)
+
+        def screenAppear(event):
+            root.overrideredirect(1)
+            
+        def hideScreen():
+            root.overrideredirect(0)
+            root.iconify()
 
         def convert():
             net = cv2.dnn.readNetFromCaffe(cwd+'\AlColorImageGenerator\model\colorization_deploy_v2.prototxt',cwd+'\AlColorImageGenerator\model\colorization_release_v2.caffemodel')
@@ -46,20 +62,45 @@ class AlColorImageGenerator:
             cv2.imshow("Colorized",colorized)
             cv2.waitKey(0)
 
-        appHighlightFont = font.Font(family='sans-serif', size=12, weight='bold')
-        textHighlightFont = font.Font(family='Segoe UI', size=12, weight='bold')
+        textHighlightFont = font.Font(family='OnePlus Sans Display', size=12)
+        appHighlightFont = font.Font(family='OnePlus Sans Display', size=12, weight='bold')
+
+        #title bar
+        titleBar = Frame(root, bg='#141414', relief=SUNKEN, bd=0)
+        icon = Image.open(os.path.join(cwd+'\\UI\\icons', 'alcolorimagegenerator.ico'))
+        icon = icon.resize((30,30), Image.ANTIALIAS)
+        icon = ImageTk.PhotoImage(icon)
+        iconLabel = Label(titleBar, image=icon)
+        iconLabel.photo = icon
+        iconLabel.config(bg='#141414')
+        iconLabel.grid(row=0,column=0,sticky="nsew")
+        titleLabel = Label(titleBar, text='ALCOLORIMAGEGENERATOR', fg='#909090', bg='#141414', font=appHighlightFont)
+        titleLabel.grid(row=0,column=1,sticky="nsew")
+        closeButton = Button(titleBar, text="x", bg='#141414', fg="#909090", borderwidth=0, command=root.destroy, font=appHighlightFont)
+        closeButton.grid(row=0,column=3,sticky="nsew")
+        minimizeButton = Button(titleBar, text="-", bg='#141414', fg="#909090", borderwidth=0, command=hideScreen, font=appHighlightFont)
+        minimizeButton.grid(row=0,column=2,sticky="nsew")
+        titleBar.grid_columnconfigure(0,weight=1)
+        titleBar.grid_columnconfigure(1,weight=2)
+        titleBar.grid_columnconfigure(2,weight=1)
+        titleBar.grid_columnconfigure(3,weight=1)
+        titleBar.pack(fill=X)
 
         #image widget
         imageFile = Label(root, text="IMAGE TO BE COVERTED")
         imageFile.pack()
-        imageFile.config(bg=color,fg="black",font=textHighlightFont)
-        imageFile= Entry(root, bg="black", fg=color, highlightbackground=color, highlightcolor=color, highlightthickness=3, bd=0,font=appHighlightFont)
+        imageFile.config(bg=color,fg="white",font=appHighlightFont)
+        imageFile= Entry(root, bg="white", fg=color, highlightbackground=color, highlightcolor=color, highlightthickness=3, bd=0,font=textHighlightFont)
         imageFile.pack(fill=X)
 
         #submit button
         convert = Button(root, borderwidth=0, highlightthickness=5, text="CONVERT IMAGE", command=convert)
-        convert.config(bg=color,fg="black",font=textHighlightFont)
+        convert.config(bg=color,fg="white",font=appHighlightFont)
         convert.pack(fill=X)
+
+        titleBar.bind("<B1-Motion>", callback)
+        titleBar.bind("<Button-3>", showScreen)
+        titleBar.bind("<Map>", screenAppear)
 
         root.mainloop()
 
