@@ -9,6 +9,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install package
 ```bash
 pip install numpy
 pip install opencv_contrib_python
+pip install Pillow
 ```
 
 ## Usage
