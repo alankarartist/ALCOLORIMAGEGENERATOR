@@ -14,7 +14,7 @@ pip install Pillow
 
 ## Usage
 
-![](/Capture.JPG)
+![](/CaptureUI.JPG)
 
 ![](/Capture1.JPG)
 
