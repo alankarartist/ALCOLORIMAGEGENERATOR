@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
-from tkinter import*
-from tkinter import font
+from tkinter import *
+from tkinter import font, filedialog
 from PIL import ImageTk, Image
 import os
 
@@ -10,7 +10,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 class AlColorImageGenerator:
     def __init__(self):
         root = Tk(className=" ALCOLORIMAGENERATOR ")
-        root.geometry("400x130+1510+885")
+        root.geometry("400x150+1510+865")
         root.resizable(0,0)
         root.iconbitmap(os.path.join(cwd+'\\UI\\icons', 'alcolorimagegenerator.ico'))
         root.config(bg="#000000")
@@ -31,6 +31,11 @@ class AlColorImageGenerator:
             root.overrideredirect(0)
             root.iconify()
 
+        def openImage():
+            imageFileEntry.delete(1.0, END)
+            filename = filedialog.askopenfilename(filetypes =[('Image Files', '*.jpg *.jpeg *.bmp *.png *.webp *.tiff')])
+            imageFileEntry.insert(1.0, filename)
+
         def convert():
             net = cv2.dnn.readNetFromCaffe(cwd+'\AlColorImageGenerator\model\colorization_deploy_v2.prototxt',cwd+'\AlColorImageGenerator\model\colorization_release_v2.caffemodel')
             pts = np.load(cwd+'\AlColorImageGenerator\model\pts_in_hull.npy')
@@ -39,9 +44,10 @@ class AlColorImageGenerator:
             pts = pts.transpose().reshape(2,313,1,1)
             net.getLayer(class8).blobs = [pts.astype("float32")]
             net.getLayer(conv8).blobs = [np.full([1,313],2.606,dtype='float32')]
-            img = imageFile.get()
-            cimg = 'color_' + img
-            img = os.path.join(cwd+'\AlColorImageGenerator\images', 'bw\\'+img)
+            img = imageFileEntry.get("1.0", END)
+            img = img.replace('/', '\\')[:-1]
+            nimg = os.path.basename(img)
+            cimg = 'color_' + nimg
             image = cv2.imread(img)
             scaled = image.astype("float32")/255.0
             lab = cv2.cvtColor(scaled,cv2.COLOR_BGR2LAB)
@@ -87,11 +93,11 @@ class AlColorImageGenerator:
         titleBar.pack(fill=X)
 
         #image widget
-        imageFile = Label(root, text="IMAGE TO BE COVERTED")
-        imageFile.pack()
-        imageFile.config(bg=color,fg="white",font=appHighlightFont)
-        imageFile= Entry(root, bg="white", fg=color, highlightbackground=color, highlightcolor=color, highlightthickness=3, bd=0,font=textHighlightFont)
+        imageFile = Button(root, text="IMAGE TO BE COVERTED", borderwidth=0, highlightthickness=3, command=openImage)
         imageFile.pack(fill=X)
+        imageFile.config(bg=color,fg="white",font=appHighlightFont)
+        imageFileEntry = Text(root, bg="white", fg=color, highlightbackground=color, highlightcolor=color, highlightthickness=3, bd=0, font=textHighlightFont, height=1)
+        imageFileEntry.pack(fill=BOTH, expand=True)
 
         #submit button
         convert = Button(root, borderwidth=0, highlightthickness=5, text="CONVERT IMAGE", command=convert)
