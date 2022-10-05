@@ -13,8 +13,10 @@ class AlColorImageGenerator:
         root = Tk(className=" ALCOLORIMAGENERATOR ")
         root.geometry("400x150+1510+865")
         root.resizable(0, 0)
-        root.iconbitmap(os.path.join(cwd+'\\UI\\icons',
-                                     'alcolorimagegenerator.ico'))
+        iconPath = os.path.join(cwd+'\\UI\\icons',
+                                'alcolorimagegenerator.ico')
+        iconPath = iconPath.replace('\\','/')
+        root.iconbitmap(iconPath)
         root.config(bg="#000000")
         root.overrideredirect(1)
         color = '#000000'
@@ -47,13 +49,18 @@ class AlColorImageGenerator:
             imageFileEntry.insert(1.0, filename)
 
         def convert():
-            net = cv2.dnn.readNetFromCaffe(cwd+'\\AlColorImageGenerator\\model'
-                                           '\\colorization_deploy_v2.prototxt',
-                                           cwd+'\\AlColorImageGenerator\\model'
-                                           '\\colorization_release_v2' +
-                                           '.caffemodel')
-            pts = np.load(cwd+'\\AlColorImageGenerator\\model\\'
-                          'pts_in_hull.npy')
+            ptPath = (cwd+'\\AlColorImageGenerator\\model'
+                      '\\colorization_deploy_v2.prototxt')
+            modelPath = (cwd+'\\AlColorImageGenerator\\model'
+                         '\\colorization_release_v2' +
+                         '.caffemodel')
+            npyPath = (cwd+'\\AlColorImageGenerator\\model\\'
+                       'pts_in_hull.npy')
+            ptPath = ptPath.replace('\\','/')
+            modelPath = modelPath.replace('\\','/')
+            npyPath = npyPath.replace('\\','/')
+            net = cv2.dnn.readNetFromCaffe(ptPath, modelPath)
+            pts = np.load(npyPath)
             class8 = net.getLayerId("class8_ab")
             conv8 = net.getLayerId("conv8_313_rh")
             pts = pts.transpose().reshape(2, 313, 1, 1)
@@ -62,6 +69,7 @@ class AlColorImageGenerator:
                                                  dtype='float32')]
             img = imageFileEntry.get("1.0", END)
             img = img.replace('/', '\\')[:-1]
+            img = img.replace('\\','/')
             nimg = os.path.basename(img)
             cimg = 'color_' + nimg
             image = cv2.imread(img)
@@ -80,6 +88,7 @@ class AlColorImageGenerator:
             colorized = (255 * colorized).astype("uint8")
             cimg = os.path.join(cwd+'\\AlColorImageGenerator\\images\\color',
                                 cimg)
+            cimg = cimg.replace('\\','/')
             cv2.imwrite(cimg, colorized)
             cv2.imshow("Original", image)
             cv2.imshow("Colorized", colorized)
@@ -90,8 +99,7 @@ class AlColorImageGenerator:
                                      weight='bold')
 
         titleBar = Frame(root, bg='#141414', relief=SUNKEN, bd=0)
-        icon = Image.open(os.path.join(cwd+'\\UI\\icons',
-                          'alcolorimagegenerator.ico'))
+        icon = Image.open(iconPath)
         icon = icon.resize((30, 30), Image.ANTIALIAS)
         icon = ImageTk.PhotoImage(icon)
         iconLabel = Label(titleBar, image=icon)
