@@ -4,8 +4,10 @@ from tkinter import Tk, END, SUNKEN, Label, Button, X
 from tkinter import font, filedialog, Text, BOTH, Frame
 from PIL import ImageTk, Image
 import os
+import platform
 
 cwd = os.path.dirname(os.path.realpath(__file__))
+systemName = platform.system()
 
 
 class AlColorImageGenerator:
@@ -15,7 +17,8 @@ class AlColorImageGenerator:
         root.resizable(0, 0)
         iconPath = os.path.join(cwd+'\\UI\\icons',
                                 'alcolorimagegenerator.ico')
-        iconPath = iconPath.replace('\\','/')
+        if systemName == 'Darwin':
+            iconPath = iconPath.replace('\\','/')
         root.iconbitmap(iconPath)
         root.config(bg="#000000")
         root.overrideredirect(1)
@@ -56,9 +59,10 @@ class AlColorImageGenerator:
                          '.caffemodel')
             npyPath = (cwd+'\\AlColorImageGenerator\\model\\'
                        'pts_in_hull.npy')
-            ptPath = ptPath.replace('\\','/')
-            modelPath = modelPath.replace('\\','/')
-            npyPath = npyPath.replace('\\','/')
+            if systemName == 'Darwin':
+                ptPath = ptPath.replace('\\','/')
+                modelPath = modelPath.replace('\\','/')
+                npyPath = npyPath.replace('\\','/')
             net = cv2.dnn.readNetFromCaffe(ptPath, modelPath)
             pts = np.load(npyPath)
             class8 = net.getLayerId("class8_ab")
@@ -69,7 +73,8 @@ class AlColorImageGenerator:
                                                  dtype='float32')]
             img = imageFileEntry.get("1.0", END)
             img = img.replace('/', '\\')[:-1]
-            img = img.replace('\\','/')
+            if systemName == 'Darwin':
+                img = img.replace('\\','/')
             nimg = os.path.basename(img)
             cimg = 'color_' + nimg
             image = cv2.imread(img)
@@ -88,7 +93,8 @@ class AlColorImageGenerator:
             colorized = (255 * colorized).astype("uint8")
             cimg = os.path.join(cwd+'\\AlColorImageGenerator\\images\\color',
                                 cimg)
-            cimg = cimg.replace('\\','/')
+            if systemName == 'Darwin':
+                cimg = cimg.replace('\\','/')
             cv2.imwrite(cimg, colorized)
             cv2.imshow("Original", image)
             cv2.imshow("Colorized", colorized)
